@@ -23,4 +23,20 @@ test("API Test using baseURL from config", async ({ request }) => {
   const data = await response.json();
 
   console.log("DATA ::: ", data);
+
+  expect (data).toHaveProperty("page");
+  expect (Number.isInteger(data.page)).toBe(true);
+
+  expect (data).toHaveProperty("per_page");
+  expect (Number.isInteger(data.per_page)).toBe(true);
+
+  expect (data).toHaveProperty("total");
+  expect (Number.isInteger(data.total)).toBe(true);
+
+  expect (data).toHaveProperty("total_pages");
+  expect (Number.isInteger(data.total_pages)).toBe(true);
+
+  expect (data).toHaveProperty("data");
+  expect (Array.isArray(data.data)).toBe(true);
+
 });
