@@ -14,6 +14,15 @@ if (!baseURL || !apiKey) {
 test.describe("GET: API – Fetch Resources Data", ()=>{
 
     test("GET: API - fetch Resource Data default pagination", async({request})=>{
+        
+        const response = await request.get(`${baseURL}/resource`,{
+            headers: { "x-api-key": apiKey },
+        });
+        
+        const page =1;
+        const perPage =6;
+
+        const data = await assertSuccessfulResponse(response, page, perPage);
 
     });
 });
