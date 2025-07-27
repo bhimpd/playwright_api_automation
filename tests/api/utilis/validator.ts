@@ -1,6 +1,6 @@
 import {expect } from "@playwright/test";
 
-export async function assertSuccessfulResponse(response: any){
+export async function assertSuccessfulResponse(response: any, expectedPage:number,expectedPerPage:number){
     
     expect(response.status()).toBe(200);
     const data = await response.json();
@@ -9,12 +9,12 @@ export async function assertSuccessfulResponse(response: any){
   
     expect (data).toHaveProperty("page");
     expect (Number.isInteger(data.page)).toBe(true);
-    expect ((data.page)).toBe(1);
+    expect ((data.page)).toBe(expectedPage);
   
   
     expect (data).toHaveProperty("per_page");
     expect (Number.isInteger(data.per_page)).toBe(true);
-    expect ((data.per_page)).toBe(6);
+    expect ((data.per_page)).toBe(expectedPerPage);
   
   
     expect (data).toHaveProperty("total");
