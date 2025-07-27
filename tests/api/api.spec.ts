@@ -49,11 +49,49 @@ test("GET: API :Fetch the Users Data", async ({ request }) => {
 
   usersData.forEach((user: any, index:number) =>{
 
-    expect(user).toHaveProperty("id");
-    expect (Number.isInteger(user.id)).toBe(true);
-    expect(user.id).toBeGreaterThan(0);
+    try {
 
-    
+      expect(user).toHaveProperty("id");
+      expect (Number.isInteger(user.id)).toBe(true);
+      expect(user.id).toBeGreaterThan(0);
+  
+      expect(user).toHaveProperty("first_name");
+      expect(typeof user.first_name).toBe("string");
+      expect(user.first_name.trim().length).toBeGreaterThan(0);
+  
+      expect(user).toHaveProperty("last_name");
+      expect(typeof user.last_name).toBe("string");
+      expect(user.last_name.trim().length).toBeGreaterThan(0);
+
+
+      // --- Email ---
+      expect(user).toHaveProperty("email");
+      expect(typeof user.email).toBe("string");
+      expect(user.email.trim().length).toBeGreaterThan(0);
+
+      // Validate email format using regex
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      expect(emailRegex.test(user.email)).toBe(true);
+
+      // --- Avatar ---
+      expect(user).toHaveProperty("avatar");
+      expect(typeof user.avatar).toBe("string");
+      expect(user.avatar.trim().length).toBeGreaterThan(0);
+
+      // Basic check if avatar is a valid URL
+      const urlRegex = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+      expect(urlRegex.test(user.avatar)).toBe(true);
+
+      // Optional: Check it ends with .jpg or .png (basic image check)
+      expect(user.avatar.endsWith(".jpg") || user.avatar.endsWith(".png") || user.avatar.endsWith(".jpeg")).toBe(true);
+      
+      
+    } catch (error) {
+       throw new Error(
+            `Validation failed at index ${index}:\n${JSON.stringify(user, null, 2)}\nError: ${error}`
+          );
+    }
+  
 
   });
 
