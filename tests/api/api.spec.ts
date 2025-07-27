@@ -10,7 +10,7 @@ if (!baseURL || !apiKey) {
 }
 
 
-test("API Test using baseURL from config", async ({ request }) => {
+test("GET: API :Fetch the Users Data", async ({ request }) => {
   console.log("BASE URL ::  ", baseURL);
 
   const response = await request.get(`${baseURL}/users`, {
@@ -38,5 +38,23 @@ test("API Test using baseURL from config", async ({ request }) => {
 
   expect (data).toHaveProperty("data");
   expect (Array.isArray(data.data)).toBe(true);
+
+  const dataLength = data.data.length;
+  console.log("User data length :: ",dataLength);
+
+  expect (dataLength).toBeGreaterThan(0);
+  expect (dataLength).toBeLessThanOrEqual(15);
+
+  const usersData = data.data;
+
+  usersData.forEach((user: any, index:number) =>{
+
+    expect(user).toHaveProperty("id");
+    expect (Number.isInteger(user.id)).toBe(true);
+    expect(user.id).toBeGreaterThan(0);
+
+    
+
+  });
 
 });
