@@ -11,8 +11,6 @@ if (!baseURL || !apiKey) {
   throw new Error("API_BASEURL or API_KEY is not defined in your .env file..Check it Out.....");
 }
 
-
-
 test.describe("GET: API – Fetch User Data", () => {
   const testCases = [
     { perPage: 6, page: 1, description: "default pagination (per_page=6, page=1)" },
