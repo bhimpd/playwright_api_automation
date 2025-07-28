@@ -107,3 +107,36 @@ export async function assertResourceDataResponse(resource:any, index:number){
     }
 }
 
+export function assertSingleDataResponse(data: any) {
+    expect(data).toHaveProperty("id");
+    expect(Number.isInteger(data.id)).toBe(true);
+    expect(data.id).toBeGreaterThan(0);
+  
+    expect(data).toHaveProperty("name");
+    expect(typeof data.name).toBe("string");
+    expect(data.name.trim().length).toBeGreaterThan(0);
+  
+    expect(data).toHaveProperty("year");
+    expect(Number.isInteger(data.year)).toBe(true);
+  
+    expect(data).toHaveProperty("color");
+    const colorRegex = /^#[0-9A-Fa-f]{6}$/;
+    expect(colorRegex.test(data.color)).toBe(true);
+  
+    expect(data).toHaveProperty("pantone_value");
+    const pantoneRegex = /^[0-9]{2}-[0-9]{4}$/;
+    expect(pantoneRegex.test(data.pantone_value)).toBe(true);
+  }
+  
+
+
+export function assertSupportInfo(support: any) {
+    expect(support).toHaveProperty("url");
+    const urlRegex = /^https?:\/\/[^\s$.?#].[^\s]*$/;
+    expect(urlRegex.test(support.url)).toBe(true);
+  
+    expect(support).toHaveProperty("text");
+    expect(typeof support.text).toBe("string");
+    expect(support.text.trim().length).toBeGreaterThan(0);
+  }
+  

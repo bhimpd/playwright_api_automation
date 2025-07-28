@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { assertSuccessfulResponse,assertUserDataResponse } from "./utilis/validator";
+import { assertSuccessfulResponse,assertUserDataResponse,assertSingleDataResponse, assertSupportInfo} from "./utilis/validator";
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -54,3 +54,29 @@ test.describe("GET: API – Fetch User Data", () => {
     });
   });
 });
+
+
+test.describe(" GET :API - Fetch single user data", ()=>{
+
+  test("Positive :: Get APi - fetching single user", async({request})=>{
+
+    const userId = 1;
+    const response = await request.get(`${baseURL}/user?id=${userId}` , {
+      headers: { "x-api-key": apiKey },
+    })
+
+    expect (response.status()).toBe(200);
+
+    const data = await response.json();
+    console.log("USER DATA :: ",data);
+
+    const userData = data.data;
+    const supportInfo = data.support;
+
+    assertSingleDataResponse(userData);
+    assertSupportInfo(supportInfo);
+
+  });
+
+  
+})
