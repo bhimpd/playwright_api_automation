@@ -55,43 +55,40 @@ test.describe("GET: API – Fetch User Data", () => {
   });
 });
 
-
-test.describe(" GET :API - Fetch single user data", ()=>{
-
-  test("Positive :: Get APi - fetching single user", async({request})=>{
-
+test.describe("GET : API - Fetch single user data", () => {
+  test("Positive :: Get API - fetching single user", async ({ request }) => {
     const userId = 1;
-    const response = await request.get(`${baseURL}/user?id=${userId}` , {
+    const response = await request.get(`${baseURL}/user?id=${userId}`, {
       headers: { "x-api-key": apiKey },
-    })
+    });
 
-    expect (response.status()).toBe(200);
+    expect(response.status()).toBe(200);
 
     const data = await response.json();
-    console.log("USER DATA :: ",data);
+    console.log("USER DATA :: ", data);
 
     const userData = data.data;
     const supportInfo = data.support;
 
     assertSingleDataResponse(userData);
     assertSupportInfo(supportInfo);
-
   });
 
+  const invalidUserIds = [1111, -123, 0, "abc"];
 
-  test("Negative :: Get APi - fetching single user when no user id is founf", async({request})=>{
+  invalidUserIds.forEach((userId) => {
+    test(`Negative :: Get API - user not found for ID: ${userId}`, async ({ request }) => {
+      const response = await request.get(`${baseURL}/user?id=${userId}`, {
+        headers: { "x-api-key": apiKey },
+      });
 
-    const userId = 11111111;
-    const response = await request.get(`${baseURL}/user?id=${userId}` , {
-      headers: { "x-api-key": apiKey },
-    })
+      expect(response.status()).toBe(404);
 
-    expect (response.status()).toBe(404);
+      const data = await response.json();
+      console.log(`USER DATA for ID ${userId} ::`, data);
 
-    const data = await response.json();
-    console.log("USER DATA :: ",data);
-
-    expect(data).toEqual({});
+      // Assuming empty response object
+      expect(data).toEqual({});
+    });
   });
-  
-})
+});
