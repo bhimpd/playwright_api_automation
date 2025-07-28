@@ -134,5 +134,35 @@ export function assertSupportInfo(support: any) {
   
     expect(support).toHaveProperty("text");
     assertNonEmptyString(support.text, "text");
-  }
+}
+
+
+export function assertSingleUserDataResponse(data: any) {
+  expect(data).toHaveProperty("id");
+  assertPositiveInteger(data.id,"id");
+
+
+  expect(data).toHaveProperty("first_name");
+  assertNonEmptyString(data.first_name,"first_name");
+  
+  expect(data).toHaveProperty("last_name");
+  assertNonEmptyString(data.last_name,"last_name");
+  
+
+   // --- Email ---
+   expect(data).toHaveProperty("email");
+   assertNonEmptyString(data.email,"email");
+
+   // Validate email format using regex
+   assertValidEmail(data.email);
+   
+   // --- Avatar ---
+   expect(data).toHaveProperty("avatar");
+   assertNonEmptyString(data.avatar,"avatar");
+
+   // Basic check if avatar is a valid URL
+   assertValidUrl(data.avatar);
+
+}
+
   

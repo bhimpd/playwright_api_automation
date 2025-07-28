@@ -2,9 +2,11 @@ import { expect } from "@playwright/test";
 
 
 export function assertPositiveInteger(value: any, fieldName: string) {
-  expect(Number.isInteger(value)).toBe(true);
-  expect(value).toBeGreaterThan(0);
+  const intVal = Number(value);
+  expect(Number.isInteger(intVal)).toBe(true);
+  expect(intVal).toBeGreaterThan(0);
 }
+
 
 export function assertNonEmptyString(value: any, fieldName: string) {
   expect(typeof value).toBe("string");

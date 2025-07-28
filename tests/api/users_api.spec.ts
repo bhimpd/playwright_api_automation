@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { assertSuccessfulResponse,assertUserDataResponse,assertSingleDataResponse, assertSupportInfo} from "./utilis/validator";
+import { assertSuccessfulResponse,assertUserDataResponse,assertSingleDataResponse, assertSupportInfo,assertSingleUserDataResponse} from "./utilis/validator";
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -92,3 +92,29 @@ test.describe("GET : API - Fetch single user data", () => {
     });
   });
 });
+
+
+
+test.describe("PUT : Update the User", () => {
+  test("Positive : PUT : Update the user with valid data", async ({request})=>{
+    const userId = 1;
+    const response = await request.put(`${baseURL}/user/${userId}`, {
+      headers:{ "x-api-key" : apiKey},
+      form :{
+            "id":1,
+            "email": "updated_george.bluth@reqres.in",
+            "first_name":"Updated_FirstName",
+            "last_name": "Updated_LastName",
+            "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
+          }
+    });
+
+    expect (response.status()).toBe(200);
+    const data = await response.json();
+
+    assertSingleUserDataResponse(data);
+
+    console.log("UPDATED DATA :: ", data);
+
+  })
+})
