@@ -1,4 +1,14 @@
 import {expect } from "@playwright/test";
+import {
+    assertPositiveInteger,
+    assertNonEmptyString,
+    assertValidEmail,
+    assertValidUrl,
+    assertImageExtension,
+    assertHexColorCode,
+    assertPantoneValueFormat
+  } from "./fieldValidators";
+  
 
 export async function assertSuccessfulResponse(response: any, expectedPage:number,expectedPerPage:number){
     
@@ -35,40 +45,34 @@ export async function assertUserDataResponse(user: any, index: number){
     try {
 
         expect(user).toHaveProperty("id");
-        expect (Number.isInteger(user.id)).toBe(true);
-        expect(user.id).toBeGreaterThan(0);
+        assertPositiveInteger(user.id,"id");
+
     
         expect(user).toHaveProperty("first_name");
-        expect(typeof user.first_name).toBe("string");
-        expect(user.first_name.trim().length).toBeGreaterThan(0);
+        assertNonEmptyString(user.first_name,"first_name");
+
     
         expect(user).toHaveProperty("last_name");
-        expect(typeof user.last_name).toBe("string");
-        expect(user.last_name.trim().length).toBeGreaterThan(0);
-  
+        assertNonEmptyString(user.last_name,"last_name");
+
   
         // --- Email ---
         expect(user).toHaveProperty("email");
-        expect(typeof user.email).toBe("string");
-        expect(user.email.trim().length).toBeGreaterThan(0);
-  
+        assertNonEmptyString(user.email,"email");
+
         // Validate email format using regex
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        expect(emailRegex.test(user.email)).toBe(true);
-  
+        assertValidEmail(user.email);
+        
         // --- Avatar ---
         expect(user).toHaveProperty("avatar");
-        expect(typeof user.avatar).toBe("string");
-        expect(user.avatar.trim().length).toBeGreaterThan(0);
-  
+        assertNonEmptyString(user.avatar,"avatar");
+
         // Basic check if avatar is a valid URL
-        const urlRegex = /^https?:\/\/[^\s$.?#].[^\s]*$/;
-        expect(urlRegex.test(user.avatar)).toBe(true);
-  
+        assertValidUrl(user.avatar);
+
+
         // Optional: Check it ends with .jpg or .png (basic image check)
-        expect(user.avatar.endsWith(".jpg") || user.avatar.endsWith(".png") || user.avatar.endsWith(".jpeg")).toBe(true);
-        
-        
+        assertImageExtension(user.avatar);        
         
       } catch (error) {
          throw new Error(
@@ -80,24 +84,21 @@ export async function assertUserDataResponse(user: any, index: number){
 export async function assertResourceDataResponse(resource:any, index:number){
     try {
         expect(resource).toHaveProperty("id");
-        expect (Number.isInteger(resource.id)).toBe(true);
-        expect(resource.id).toBeGreaterThan(0);      
+        assertPositiveInteger(resource.id,"id");
+     
 
         expect(resource).toHaveProperty("name");
-        expect (typeof (resource.name)).toBe("string");
-        expect(resource.name.trim().length).toBeGreaterThan(0);
+        assertNonEmptyString(resource.name,"name");
+
 
         expect(resource).toHaveProperty("year");
-        expect (Number.isInteger(resource.year)).toBe(true);
-        expect(resource.year).toBeGreaterThan(0);
-    
+        assertPositiveInteger(resource.year,"year");
+      
         expect(resource).toHaveProperty("color");
-        expect (typeof (resource.color)).toBe("string");
-        expect(resource.color.trim().length).toBeGreaterThan(0);
-
+        assertHexColorCode(resource.color);
+        
         expect(resource).toHaveProperty("pantone_value");
-        expect (typeof (resource.pantone_value)).toBe("string");
-        expect(resource.pantone_value.trim().length).toBeGreaterThan(0);
+         assertPantoneValueFormat(resource.pantone_value);
         
 
     } catch (error) {
@@ -109,34 +110,29 @@ export async function assertResourceDataResponse(resource:any, index:number){
 
 export function assertSingleDataResponse(data: any) {
     expect(data).toHaveProperty("id");
-    expect(Number.isInteger(data.id)).toBe(true);
-    expect(data.id).toBeGreaterThan(0);
+    assertPositiveInteger(data.id,"id");
+
   
     expect(data).toHaveProperty("name");
-    expect(typeof data.name).toBe("string");
-    expect(data.name.trim().length).toBeGreaterThan(0);
-  
+    assertNonEmptyString(data.name,"name");
+    
+
     expect(data).toHaveProperty("year");
-    expect(Number.isInteger(data.year)).toBe(true);
+    assertPositiveInteger(data.year,"year");
   
     expect(data).toHaveProperty("color");
-    const colorRegex = /^#[0-9A-Fa-f]{6}$/;
-    expect(colorRegex.test(data.color)).toBe(true);
-  
+    assertHexColorCode(data.color);
+   
     expect(data).toHaveProperty("pantone_value");
-    const pantoneRegex = /^[0-9]{2}-[0-9]{4}$/;
-    expect(pantoneRegex.test(data.pantone_value)).toBe(true);
-  }
+    assertPantoneValueFormat(data.pantone_value);
+}
   
-
 
 export function assertSupportInfo(support: any) {
     expect(support).toHaveProperty("url");
-    const urlRegex = /^https?:\/\/[^\s$.?#].[^\s]*$/;
-    expect(urlRegex.test(support.url)).toBe(true);
+    assertValidUrl(support.url)
   
     expect(support).toHaveProperty("text");
-    expect(typeof support.text).toBe("string");
-    expect(support.text.trim().length).toBeGreaterThan(0);
+    assertNonEmptyString(support.text, "text");
   }
   
