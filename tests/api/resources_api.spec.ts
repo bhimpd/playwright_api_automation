@@ -13,15 +13,18 @@ if (!baseURL || !apiKey) {
 
 test.describe("GET: API – Fetch Resources Data", ()=>{
 
-    test("GET: API - fetch Resource Data default pagination", async({request})=>{
-        
-        const response = await request.get(`${baseURL}/resource`,{
-            headers: { "x-api-key": apiKey },
-        });
-        
-        const page =1;
-        const perPage =6;
+    const testCases = [
+        { perPage: 6, page: 1, description: "default pagination (per_page=6, page=1)" },
+        { perPage: 10, page: 1, description: "per_page=10 and page=1" },
+        { perPage: 10, page: 2, description: "per_page=10 and page=2" },
+      ];
 
+    testCases.forEach(({ perPage, page, description }) => {
+        test(`GET: ${description}`, async ({ request }) => {
+          const response = await request.get(`${baseURL}/resource?page=${page}&per_page=${perPage}`, {
+            headers: { "x-api-key": apiKey },
+          });
+        
         const data = await assertSuccessfulResponse(response, page, perPage);
 
         const resourceData = data.data;
@@ -40,6 +43,7 @@ test.describe("GET: API – Fetch Resources Data", ()=>{
 
         expect(ids.size).toBe(resourceLength);
         console.log("IDS SIZE :: ", ids.size)
+       
+        });
     });
-    
 });
