@@ -30,9 +30,26 @@ test.describe("GET: API – Fetch User Data", () => {
       expect(usersData.length).toBeGreaterThan(0);
       expect(usersData.length).toBeLessThanOrEqual(perPage);
 
+      const ids = new Set();
+      const emails = new Set();
+
       usersData.forEach((user: any, index: number) => {
         assertUserDataResponse(user, index);
+        
+        // Add to sets
+        ids.add(user.id);
+        emails.add(user.email);
+
       });
+
+    // ✅ Uniqueness check
+    expect(ids.size).toBe(usersData.length);
+    expect(emails.size).toBe(usersData.length);
+
+    console.log("ID SIZE :: ", ids.size);
+    console.log("EMAILS SIZE :: ", emails.size);
+    console.log("USERS DATAT :: ", usersData.length);
+
       
     });
   });
