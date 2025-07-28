@@ -77,3 +77,33 @@ export async function assertUserDataResponse(user: any, index: number){
       }
 }
 
+export async function assertResourceDataResponse(resource:any, index:number){
+    try {
+        expect(resource).toHaveProperty("id");
+        expect (Number.isInteger(resource.id)).toBe(true);
+        expect(resource.id).toBeGreaterThan(0);      
+
+        expect(resource).toHaveProperty("name");
+        expect (typeof (resource.name)).toBe("string");
+        expect(resource.name.trim().length).toBeGreaterThan(0);
+
+        expect(resource).toHaveProperty("year");
+        expect (Number.isInteger(resource.year)).toBe(true);
+        expect(resource.year).toBeGreaterThan(0);
+    
+        expect(resource).toHaveProperty("color");
+        expect (typeof (resource.color)).toBe("string");
+        expect(resource.color.trim().length).toBeGreaterThan(0);
+
+        expect(resource).toHaveProperty("pantone_value");
+        expect (typeof (resource.pantone_value)).toBe("string");
+        expect(resource.pantone_value.trim().length).toBeGreaterThan(0);
+        
+
+    } catch (error) {
+        throw new Error(
+              `Validation failed at index ${index}:\n${JSON.stringify(resource, null, 2)}\nError: ${error}`
+            );
+    }
+}
+

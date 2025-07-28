@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { assertSuccessfulResponse,assertUserDataResponse } from "./utilis/validator";
+import { assertSuccessfulResponse,assertResourceDataResponse } from "./utilis/validator";
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -32,30 +32,14 @@ test.describe("GET: API – Fetch Resources Data", ()=>{
         const ids = new Set();
 
         resourceData.forEach((resource:any, index:number) => {
-            expect(resource).toHaveProperty("id");
-            expect (Number.isInteger(resource.id)).toBe(true);
-            expect(resource.id).toBeGreaterThan(0);      
 
-            expect(resource).toHaveProperty("name");
-            expect (typeof (resource.name)).toBe("string");
-            expect(resource.name.trim().length).toBeGreaterThan(0);
-
-            expect(resource).toHaveProperty("year");
-            expect (Number.isInteger(resource.year)).toBe(true);
-            expect(resource.year).toBeGreaterThan(0);
-        
-            expect(resource).toHaveProperty("color");
-            expect (typeof (resource.color)).toBe("string");
-            expect(resource.color.trim().length).toBeGreaterThan(0);
-
-            expect(resource).toHaveProperty("pantone_value");
-            expect (typeof (resource.pantone_value)).toBe("string");
-            expect(resource.pantone_value.trim().length).toBeGreaterThan(0);
-        
+            assertResourceDataResponse(resource,index);
             ids.add(resource.id);
+
         })
 
         expect(ids.size).toBe(resourceLength);
         console.log("IDS SIZE :: ", ids.size)
     });
+    
 });
