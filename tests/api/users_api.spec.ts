@@ -78,5 +78,20 @@ test.describe(" GET :API - Fetch single user data", ()=>{
 
   });
 
+
+  test("Negative :: Get APi - fetching single user when no user id is founf", async({request})=>{
+
+    const userId = 11111111;
+    const response = await request.get(`${baseURL}/user?id=${userId}` , {
+      headers: { "x-api-key": apiKey },
+    })
+
+    expect (response.status()).toBe(404);
+
+    const data = await response.json();
+    console.log("USER DATA :: ",data);
+
+    expect(data).toEqual({});
+  });
   
 })
