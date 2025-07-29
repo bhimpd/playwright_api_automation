@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { assertSuccessfulResponse,assertUserDataResponse,assertSingleDataResponse, assertSupportInfo,assertSingleUserDataResponse} from "./utilis/validator";
+import formData  from "../testdata/user_form_data.json"
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -98,15 +99,9 @@ test.describe("GET : API - Fetch single user data", () => {
 test.describe("PUT : Update the User", () => {
   test("Positive : PUT : Update the user with valid data", async ({request})=>{
     const userId = 1;
-    const response = await request.put(`${baseURL}/user/${userId}`, {
+    const response = await request.put(`${baseURL}/users/${userId}`, {
       headers:{ "x-api-key" : apiKey},
-      form :{
-            "id":1,
-            "email": "updated_george.bluth@reqres.in",
-            "first_name":"Updated_FirstName",
-            "last_name": "Updated_LastName",
-            "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
-          }
+      form :formData
     });
 
     expect (response.status()).toBe(200);
@@ -117,20 +112,41 @@ test.describe("PUT : Update the User", () => {
   });
 
   test("Negative : PUT : Update the user without  id in the url", async ({request})=>{
-    const response = await request.put(`${baseURL}/user`, {
+    const response = await request.put(`${baseURL}/users`, {
       headers:{ "x-api-key" : apiKey},
-      form :{
-            "id":1,
-            "email": "updated_george.bluth@reqres.in",
-            "first_name":"Updated_FirstName",
-            "last_name": "Updated_LastName",
-            "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
-          }
+      form :formData
     });
 
     expect (response.status()).toBe(404);
    
   });
 
+})
+
+
+test.describe("PATCH : Update the User", () => {
+  test("Positive : PATCH : Update the user with valid data", async ({request})=>{
+    const userId = 1;
+    const response = await request.patch(`${baseURL}/users/${userId}`, {
+      headers:{ "x-api-key" : apiKey},
+      form :formData
+    });
+
+    expect (response.status()).toBe(200);
+    const data = await response.json();
+
+    assertSingleUserDataResponse(data);
+   
+  });
+
+  test("Negative : PATCH : Update the user without  id in the url", async ({request})=>{
+    const response = await request.patch(`${baseURL}/users`, {
+      headers:{ "x-api-key" : apiKey},
+      form :formData
+    });
+
+    expect (response.status()).toBe(404);
+   
+  });
 
 })
