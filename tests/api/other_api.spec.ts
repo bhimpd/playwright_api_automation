@@ -32,7 +32,7 @@ test.describe("POST:API : Create the User", () => {
           assertNonEmptyString(body.token,"token");
     });
 
-    test("Negative:: Create the user with missing email", async({request}) => {
+    test("Negative:: Create the user with missing email parameter", async({request}) => {
         const form = { ...formData.loginUser } as any;
         delete form.email;  
 
@@ -47,7 +47,7 @@ test.describe("POST:API : Create the User", () => {
           expect (body.error).toBe("Missing email or username");
     });
 
-    test("Negative:: Create the user with missing password", async({request}) => {
+    test("Negative:: Create the user with missing password parameter", async({request}) => {
         const form = { ...formData.loginUser } as any;
         delete form.password;  
 
@@ -82,5 +82,26 @@ test.describe("POST:API : Create the User", () => {
         assertValidIsoDate(data.createdAt, "createdAt");
     });
 
+});
+
+
+test.describe("POST:API : Login the User", () =>{
+    test("Positive: Login the user witht the valid user data..", async({request})=>{
+        const response = await request.post(`${baseURL}/login`,{
+            headers: { "x-api-key": apiKey },
+            form:{
+                "username":"eve.holt@reqres.in",
+                "password":"Password1!"
+            }
+        })
+
+        expect (response.status()).toBe(200);
+
+        const body =  await response.json();
+        console.log("BODY DATA :: ",body);
+
+        expect (body).toHaveProperty("token");
+        assertNonEmptyString(body.token,"token")
+    });
 });
 
