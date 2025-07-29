@@ -2,7 +2,7 @@ import {test,expect} from "@playwright/test";
 import dotenv from "dotenv";
 dotenv.config();
 
-import { assertSuccessfulResponse,assertResourceDataResponse } from "./utilis/validator";
+import { assertSuccessfulResponse,assertResourceDataResponse, assertSingleDataResponse, assertSupportInfo} from "./utilis/validator";
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -48,3 +48,26 @@ test.describe("GET: API – Fetch Resources Data", ()=>{
     });
     
 });
+
+
+test.describe("GET: Fetch the single resource", () => {
+  test("Positive: Fetch the single resource data.", async({request}) =>{
+    const userId = 1;
+    const response = await request.get(`${baseURL}/resource?id=${userId}`, {
+      headers: { "x-api-key": apiKey },
+    });
+
+    expect(response.status()).toBe(200);
+
+    const data = await response.json();
+    console.log("USER DATA :: ", data);
+
+    const resourceData = data.data;
+    assertSingleDataResponse(resourceData);
+
+    const supportInfo = data.support;
+    assertSupportInfo(supportInfo);
+
+  });
+
+})
