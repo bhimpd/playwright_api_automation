@@ -46,4 +46,20 @@ test.describe("POST:API : Create the User", () => {
 
           expect (body.error).toBe("Missing email or username");
     });
+
+    test("Negative:: Create the user with missing password", async({request}) => {
+        const form = { ...formData.loginUser } as any;
+        delete form.password;  
+
+        const response = await request.post(`${baseURL}/register`, {
+            headers: { "x-api-key": apiKey },
+            form :form
+          });
+
+          expect (response.status()).toBe(400);
+          const body = await response.json();
+
+          expect (body.error).toBe("Missing password");
+    });
+
 });
