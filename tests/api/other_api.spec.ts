@@ -103,5 +103,57 @@ test.describe("POST:API : Login the User", () =>{
         expect (body).toHaveProperty("token");
         assertNonEmptyString(body.token,"token")
     });
+
+    test("Negative: Login the user with non existing user.", async({request})=>{
+        const response = await request.post(`${baseURL}/login`,{
+            headers: { "x-api-key": apiKey },
+            form:{
+                "username":"test@gmail.com",
+                "password":"Password1!"
+            }
+        })
+
+        expect (response.status()).toBe(400);
+
+        const body =  await response.json();
+        console.log("BODY DATA :: ",body);
+
+        expect (body).toHaveProperty("error");
+        expect(body.error).toBe("user not found");
+    });
+
+    test("Negative: Login the user with missing username or email", async({request})=>{
+        const response = await request.post(`${baseURL}/login`,{
+            headers: { "x-api-key": apiKey },
+            form:{
+                "password":"Password1!"
+            }
+        })
+
+        expect (response.status()).toBe(400);
+
+        const body =  await response.json();
+        console.log("BODY DATA :: ",body);
+
+        expect (body).toHaveProperty("error");
+        expect(body.error).toBe("Missing email or username");
+    });
+
+    test("Negative: Login the user with missing password", async({request})=>{
+        const response = await request.post(`${baseURL}/login`,{
+            headers: { "x-api-key": apiKey },
+            form:{
+                "username":"eve.holt@reqres.in",
+            }
+        })
+
+        expect (response.status()).toBe(400);
+
+        const body =  await response.json();
+        console.log("BODY DATA :: ",body);
+
+        expect (body).toHaveProperty("error");
+        expect(body.error).toBe("Missing password");
+    });
 });
 
