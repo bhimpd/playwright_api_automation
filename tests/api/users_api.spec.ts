@@ -95,7 +95,6 @@ test.describe("GET : API - Fetch single user data", () => {
 });
 
 
-
 test.describe("PUT : Update the User", () => {
   test("Positive : PUT : Update the user with valid data", async ({request})=>{
     const userId = 1;
@@ -150,3 +149,17 @@ test.describe("PATCH : Update the User", () => {
   });
 
 })
+
+test.describe("DELETE : Delete the User", () => {
+  test("Positive : Delete the user with valid data", async ({request})=>{
+    const userId = 1;
+    const response = await request.delete(`${baseURL}/users/${userId}`, {
+      headers:{ "x-api-key" : apiKey}
+     });
+
+    expect (response.status()).toBe(204);
+  });
+
+})
+
+
