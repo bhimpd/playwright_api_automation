@@ -3,7 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import formData  from "../testdata/user_form_data.json"
-import { assertPositiveInteger,assertNonEmptyString } from "./utilis/fieldValidators";
+import { assertPositiveInteger, assertNonEmptyString, assertValidIsoDate } from "./utilis/fieldValidators";
 
 const baseURL = process.env.API_BASEURL;
 const apiKey = process.env.API_KEY;
@@ -62,4 +62,25 @@ test.describe("POST:API : Create the User", () => {
           expect (body.error).toBe("Missing password");
     });
 
+
+    test("Positive : Register the User", async({request}) =>{
+        const response = await request.post(`${baseURL}/registerUser`, {
+            headers: { "x-api-key": apiKey },
+            form :formData.loginUser
+          });
+
+        expect (response.status()).toBe(201);
+        const data = await response.json();
+        console.log("REGISTERED DATA :: ", data);
+
+        expect(data.email).toBe(formData.loginUser.email);
+        expect(data.user_name).toBe(formData.loginUser.user_name);
+        expect(data.password).toBe(formData.loginUser.password);
+
+        assertPositiveInteger(data.id,"id")
+      
+        assertValidIsoDate(data.createdAt, "createdAt");
+    });
+
 });
+
