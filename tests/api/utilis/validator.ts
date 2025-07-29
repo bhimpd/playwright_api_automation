@@ -6,7 +6,10 @@ import {
     assertValidUrl,
     assertImageExtension,
     assertHexColorCode,
-    assertPantoneValueFormat
+    assertPantoneValueFormat,
+    assertValidIsoDate,
+    assertDateIsRecent,
+
   } from "./fieldValidators";
   
 
@@ -152,16 +155,17 @@ export function assertSingleUserDataResponse(data: any) {
    // --- Email ---
    expect(data).toHaveProperty("email");
    assertNonEmptyString(data.email,"email");
-
-   // Validate email format using regex
    assertValidEmail(data.email);
    
    // --- Avatar ---
    expect(data).toHaveProperty("avatar");
    assertNonEmptyString(data.avatar,"avatar");
-
-   // Basic check if avatar is a valid URL
    assertValidUrl(data.avatar);
+
+   // Assert the Update date and value
+   expect(data).toHaveProperty("updatedAt");
+   assertValidIsoDate(data.updatedAt, "updatedAt");
+   assertDateIsRecent(data.updatedAt, "updatedAt");
 
 }
 

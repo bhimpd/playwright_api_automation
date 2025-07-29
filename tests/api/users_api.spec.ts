@@ -113,7 +113,7 @@ test.describe("PUT : Update the User", () => {
     const data = await response.json();
 
     assertSingleUserDataResponse(data);
-
+   
     console.log("UPDATED DATA :: ", data);
 
   })
