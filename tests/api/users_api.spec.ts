@@ -114,7 +114,23 @@ test.describe("PUT : Update the User", () => {
 
     assertSingleUserDataResponse(data);
    
-    console.log("UPDATED DATA :: ", data);
+  });
 
-  })
+  test("Negative : PUT : Update the user without  id in the url", async ({request})=>{
+    const response = await request.put(`${baseURL}/user`, {
+      headers:{ "x-api-key" : apiKey},
+      form :{
+            "id":1,
+            "email": "updated_george.bluth@reqres.in",
+            "first_name":"Updated_FirstName",
+            "last_name": "Updated_LastName",
+            "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
+          }
+    });
+
+    expect (response.status()).toBe(404);
+   
+  });
+
+
 })
