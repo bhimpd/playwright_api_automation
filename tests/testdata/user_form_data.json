@@ -1,7 +1,15 @@
 {
-    "id":1,
-    "email": "updated_george.bluth@reqres.in",
-    "first_name":"Updated_FirstName",
-    "last_name": "Updated_LastName",
-    "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
-}
+    "updateUser": {
+      "id":1,
+      "email": "updated_george.bluth@reqres.in",
+      "first_name":"Updated_FirstName",
+      "last_name": "Updated_LastName",
+      "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
+    },
+    "loginUser": {
+      "email": "eve.holt@reqres.in",
+      "user_name":"Victor Memo",
+      "password": "Password1!"
+    }
+  }
+  

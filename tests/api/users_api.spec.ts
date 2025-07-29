@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { assertSuccessfulResponse,assertUserDataResponse,assertSingleDataResponse, assertSupportInfo,assertSingleUserDataResponse} from "./utilis/validator";
+
 import formData  from "../testdata/user_form_data.json"
 
 const baseURL = process.env.API_BASEURL;
@@ -100,7 +101,7 @@ test.describe("PUT : Update the User", () => {
     const userId = 1;
     const response = await request.put(`${baseURL}/users/${userId}`, {
       headers:{ "x-api-key" : apiKey},
-      form :formData
+      form :formData.updateUser
     });
 
     expect (response.status()).toBe(200);
@@ -113,7 +114,7 @@ test.describe("PUT : Update the User", () => {
   test("Negative : PUT : Update the user without  id in the url", async ({request})=>{
     const response = await request.put(`${baseURL}/users`, {
       headers:{ "x-api-key" : apiKey},
-      form :formData
+      form :formData.updateUser
     });
 
     expect (response.status()).toBe(404);
@@ -128,7 +129,7 @@ test.describe("PATCH : Update the User", () => {
     const userId = 1;
     const response = await request.patch(`${baseURL}/users/${userId}`, {
       headers:{ "x-api-key" : apiKey},
-      form :formData
+      form :formData.updateUser
     });
 
     expect (response.status()).toBe(200);
@@ -141,7 +142,7 @@ test.describe("PATCH : Update the User", () => {
   test("Negative : PATCH : Update the user without  id in the url", async ({request})=>{
     const response = await request.patch(`${baseURL}/users`, {
       headers:{ "x-api-key" : apiKey},
-      form :formData
+      form :formData.updateUser
     });
 
     expect (response.status()).toBe(404);
