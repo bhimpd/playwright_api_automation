@@ -14,7 +14,7 @@ if (!baseURL || !apiKey) {
 
 test.describe("POST:API : Create the User", () => {
 
-    test("Create the user with valid data", async({request}) => {
+    test("Positive:: Create the user with valid data", async({request}) => {
         const response = await request.post(`${baseURL}/register`, {
             headers: { "x-api-key": apiKey },
             form :formData.loginUser
@@ -30,5 +30,20 @@ test.describe("POST:API : Create the User", () => {
 
           expect (body).toHaveProperty("token");
           assertNonEmptyString(body.token,"token");
-        });
+    });
+
+    test("Negative:: Create the user with missing email", async({request}) => {
+        const form = { ...formData.loginUser } as any;
+        delete form.email;  
+
+        const response = await request.post(`${baseURL}/register`, {
+            headers: { "x-api-key": apiKey },
+            form :form
+          });
+
+          expect (response.status()).toBe(400);
+          const body = await response.json();
+
+          expect (body.error).toBe("Missing email or username");
+    });
 });
