@@ -101,13 +101,24 @@ test.describe("GET -method :: Users API...", () => {
 
 
 test.describe("GET - method : fetch Posts", () =>{
-    test("Positive: get all the posts", async({request}) => {
+    test("Positive: Assert each object has required properties", async({request}) => {
         const response = await request.get(`${goRestBaseURL}/posts`);
 
         expect (response.status()).toBe(200);
         const body = await response.json();
 
         console.log("BODY  :: ", body);
+
+        // Check response is an array
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+
+        for (const post of body) {
+            expect(post).toHaveProperty('id');
+            expect(post).toHaveProperty('user_id');
+            expect(post).toHaveProperty('title');
+            expect(post).toHaveProperty('body');
+        }
 
     });
 })
