@@ -86,4 +86,16 @@ test.describe("Users API...", () => {
 
     });
 
+
+    test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
+        const response = await request.get(`${goRestBaseURL}/use`, {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        });
+
+        expect(response.status()).toBe(404);
+
+        
+    });
 });
