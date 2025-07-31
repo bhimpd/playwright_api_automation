@@ -153,4 +153,12 @@ test.describe("GET - method : fetch Posts", () =>{
         }
 
     });
+
+    test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
+        const response = await request.get(`${goRestBaseURL}/post`, {
+        });
+
+        expect(response.status()).toBe(404);
+
+    });
 })
