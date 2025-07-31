@@ -188,37 +188,41 @@ test.describe("GET - method : fetch Comments", () =>{
 
     });
 
-    // test("Positive: Assert each object has required properties and valid data...", async({request}) => {
-    //     const response = await request.get(`${goRestBaseURL}/posts`);
+    test("Positive: Assert each object has required properties and valid data...", async({request}) => {
+        const response = await request.get(`${goRestBaseURL}/comments`);
 
-    //     expect (response.status()).toBe(200);
-    //     const body = await response.json();
+        expect (response.status()).toBe(200);
+        const body = await response.json();
 
-    //     console.log("BODY  :: ", body);
+        console.log("BODY  :: ", body);
 
-    //     // Check response is an array
-    //     expect(Array.isArray(body)).toBe(true);
-    //     expect(body.length).toBeGreaterThan(0);
-    //     const idSet = new Set();
+        // Check response is an array
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+        const idSet = new Set();
 
-    //     for (const post of body) {
-    //         expect(post).toHaveProperty('id');
-    //         assertPositiveInteger(post.id);
-    //         expect(idSet.has(post.id)).toBe(false);
-    //         idSet.add(post.id);
+        for (const comment of body) {
+            expect(comment).toHaveProperty('id');
+            assertPositiveInteger(comment.id);
+            expect(idSet.has(comment.id)).toBe(false);
+            idSet.add(comment.id);
 
-    //         expect(post).toHaveProperty('user_id');
-    //         assertPositiveInteger(post.user_id);
+            expect(comment).toHaveProperty('post_id');
+            assertPositiveInteger(comment.post_id);
            
-    //         expect(post).toHaveProperty('title');
-    //         assertNonEmptyString(post.title);
+            expect(comment).toHaveProperty('name');
+            assertNonEmptyString(comment.name);
 
-    //         expect(post).toHaveProperty('body');
-    //         assertNonEmptyString(post.body);
+            expect(comment).toHaveProperty('email');
+            assertNonEmptyString(comment.email);
+            assertValidEmail(comment.email);
 
-    //     }
+            expect(comment).toHaveProperty('body');
+            assertNonEmptyString(comment.body);
 
-    // });
+        }
+
+    });
 
     test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
         const response = await request.get(`${goRestBaseURL}/comment`, {
