@@ -162,3 +162,69 @@ test.describe("GET - method : fetch Posts", () =>{
 
     });
 })
+
+
+test.describe("GET - method : fetch Comments", () =>{
+    test("Positive: Assert each object has required properties", async({request}) => {
+        const response = await request.get(`${goRestBaseURL}/comments`);
+
+        expect (response.status()).toBe(200);
+        const body = await response.json();
+
+        console.log("BODY  :: ", body);
+
+        // Check response is an array
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+
+        for (const comment of body) {
+            expect(comment).toHaveProperty('id');
+            expect(comment).toHaveProperty('post_id');
+            expect(comment).toHaveProperty('name');
+            expect(comment).toHaveProperty('email');
+            expect(comment).toHaveProperty('body');
+
+        }
+
+    });
+
+    // test("Positive: Assert each object has required properties and valid data...", async({request}) => {
+    //     const response = await request.get(`${goRestBaseURL}/posts`);
+
+    //     expect (response.status()).toBe(200);
+    //     const body = await response.json();
+
+    //     console.log("BODY  :: ", body);
+
+    //     // Check response is an array
+    //     expect(Array.isArray(body)).toBe(true);
+    //     expect(body.length).toBeGreaterThan(0);
+    //     const idSet = new Set();
+
+    //     for (const post of body) {
+    //         expect(post).toHaveProperty('id');
+    //         assertPositiveInteger(post.id);
+    //         expect(idSet.has(post.id)).toBe(false);
+    //         idSet.add(post.id);
+
+    //         expect(post).toHaveProperty('user_id');
+    //         assertPositiveInteger(post.user_id);
+           
+    //         expect(post).toHaveProperty('title');
+    //         assertNonEmptyString(post.title);
+
+    //         expect(post).toHaveProperty('body');
+    //         assertNonEmptyString(post.body);
+
+    //     }
+
+    // });
+
+    test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
+        const response = await request.get(`${goRestBaseURL}/comment`, {
+        });
+
+        expect(response.status()).toBe(404);
+
+    });
+})
