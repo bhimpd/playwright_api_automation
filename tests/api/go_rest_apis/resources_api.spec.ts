@@ -20,9 +20,12 @@ test.describe("Users API...", () => {
 
         expect (response.status()).toBe(200);
         const body = await response.json();
+        console.log("BODY DATA :: ",  body);
 
-        console.log("BODY DATA :: ",  body)
+        expect (Array.isArray(body)).toBe(true);
 
+        const bodyLength =  body.length;
+        expect (bodyLength).toBeGreaterThan(0);
 
     });
 })
