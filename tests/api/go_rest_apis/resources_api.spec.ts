@@ -48,25 +48,29 @@ test.describe("Users API...", () => {
         expect(response.status()).toBe(200);
 
         const body = await response.json();
-        console.log("BODY DATA :: ", body);
 
         // Check response is an array
         expect(Array.isArray(body)).toBe(true);
         expect(body.length).toBeGreaterThan(0);
 
         const idSet = new Set();
+        const emailSet = new Set();
 
         // Loop over each object and check required properties
         for (const user of body) {
             expect(user).toHaveProperty('id');
             assertPositiveInteger(user.id);
+            expect(idSet.has(user.id)).toBe(false);
+            idSet.add(user.id);
 
             expect(user).toHaveProperty('name');
             assertNonEmptyString(user.name);
 
             expect(user).toHaveProperty('email');
             assertNonEmptyString(user.email);
-            assertValidEmail(user.email)
+            assertValidEmail(user.email);
+            expect(emailSet.has(user.email)).toBe(false);
+            emailSet.add(user.email);
 
             expect(user).toHaveProperty('gender');
             assertNonEmptyString(user.gender);
@@ -75,8 +79,10 @@ test.describe("Users API...", () => {
             expect(user).toHaveProperty('status');
             assertNonEmptyString(user.status);
             assertStatus(user.status);
-
         }
+
+        console.log("USERS ID :: ", idSet);
+        console.log("USERS EMAIl :: ", emailSet);
 
     });
 
