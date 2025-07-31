@@ -11,7 +11,7 @@ if (!goRestBaseURL || !token) {
     throw new Error("GOREST_BASEURL or TOKEN is not defined in your .env file..Check it Out.....");
 }
 
-test.describe("Users API...", () => {
+test.describe("GET -method :: Users API...", () => {
     test("POSITIVE : GET API - Assert each object has required properties", async ({ request }) => {
         const response = await request.get(`${goRestBaseURL}/users`, {
             headers: {
@@ -86,7 +86,6 @@ test.describe("Users API...", () => {
 
     });
 
-
     test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
         const response = await request.get(`${goRestBaseURL}/use`, {
             headers: {
@@ -99,3 +98,16 @@ test.describe("Users API...", () => {
         
     });
 });
+
+
+test.describe("GET - method : fetch Posts", () =>{
+    test("Positive: get all the posts", async({request}) => {
+        const response = await request.get(`${goRestBaseURL}/posts`);
+
+        expect (response.status()).toBe(200);
+        const body = await response.json();
+
+        console.log("BODY  :: ", body);
+
+    });
+})
