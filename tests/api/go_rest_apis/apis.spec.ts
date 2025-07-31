@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 import dotenv from "dotenv";
 dotenv.config();
 
-import { assertPositiveInteger,assertNonEmptyString, assertNonEmptyArray, assertValidEmail, assertGender, assertStatus } from './helper/helperFunction';
+import { assertPositiveInteger,assertNonEmptyString, assertValidEmail, assertGender,assertStatus, assertToDoStatus, assertValidDueOnDate, } from './helper/helperFunction';
 
 const goRestBaseURL = process.env.GOREST_BASEURL;
 const token = process.env.GOREST_TOKEN;
@@ -226,6 +226,75 @@ test.describe("GET - method : fetch Comments", () =>{
 
     test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
         const response = await request.get(`${goRestBaseURL}/comment`, {
+        });
+
+        expect(response.status()).toBe(404);
+
+    });
+})
+
+
+test.describe("GET - method : fetch ToDos", () =>{
+    test("Positive: Assert each object has required properties", async({request}) => {
+        const response = await request.get(`${goRestBaseURL}/todos`);
+
+        expect (response.status()).toBe(200);
+        const body = await response.json();
+
+        console.log("BODY  :: ", body);
+
+        // Check response is an array
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+
+        for (const todo of body) {
+            expect(todo).toHaveProperty('id');
+            expect(todo).toHaveProperty('user_id');
+            expect(todo).toHaveProperty('title');
+            expect(todo).toHaveProperty('due_on');
+            expect(todo).toHaveProperty('status');
+
+        }
+
+    });
+
+    test("Positive: Assert each object has required properties and valid data...", async({request}) => {
+        const response = await request.get(`${goRestBaseURL}/todos`);
+
+        expect (response.status()).toBe(200);
+        const body = await response.json();
+        assertStatus
+        console.log("BODY  :: ", body);
+
+        // Check response is an array
+        expect(Array.isArray(body)).toBe(true);
+        expect(body.length).toBeGreaterThan(0);
+        const idSet = new Set();
+
+        for (const todo of body) {
+            expect(todo).toHaveProperty('id');
+            assertPositiveInteger(todo.id);
+            expect(idSet.has(todo.id)).toBe(false);
+            idSet.add(todo.id);
+
+            expect(todo).toHaveProperty('user_id');
+            assertPositiveInteger(todo.user_id);
+           
+            expect(todo).toHaveProperty('title');
+            assertNonEmptyString(todo.title);
+
+            expect(todo).toHaveProperty('due_on');
+            assertValidDueOnDate(todo.due_on);
+            
+            expect(todo).toHaveProperty('status');
+            assertToDoStatus(todo.status)
+
+
+        }
+    });
+
+    test("NEGATIVE : GET API - wrong url ", async ({ request }) => {
+        const response = await request.get(`${goRestBaseURL}/todo`, {
         });
 
         expect(response.status()).toBe(404);
