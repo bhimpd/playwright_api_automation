@@ -62,7 +62,6 @@ test.describe("POST:API : Create the User", () => {
           expect (body.error).toBe("Missing password");
     });
 
-
     test("Positive : Register the User", async({request}) =>{
         const response = await request.post(`${baseURL}/registerUser`, {
             headers: { "x-api-key": apiKey },
