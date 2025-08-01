@@ -401,4 +401,27 @@ test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
         }
 
     });
+
+    test("Negative: Fetch the user post data for incorrect url", async({ request }) =>{
+        const userId = 7440131;
+        const response = await request.get(`${goRestBaseURL}/users/${userId}/postssss`);
+        expect (response.status()).toBe(404);
+    });
+
+    test("Negative: Fetch the user post data for non existing user", async({ request }) =>{
+        const userId = 99999999999;
+        const response = await request.get(`${goRestBaseURL}/users/${userId}/posts`);
+        
+        const body  = await response.json();
+        console.log("Body :: ", body);
+
+        expect (response.status()).toBe(200);
+        expect (Array.isArray(body)).toBe(true);
+
+        const bodyLength = body.length;
+        expect (bodyLength).toBe(0);
+
+
+    });
+
 })
