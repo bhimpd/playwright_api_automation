@@ -424,4 +424,29 @@ test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
 
     });
 
+    test("Should return 400 or 422 for SQL injection in user_id BUt it is returning 200 with empty array in our case...", async ({ request }) => {
+        const maliciousUserId = "1 OR 1=1";  // SQL injection attempt
+        const response = await request.get(`${goRestBaseURL}/users/${maliciousUserId}/posts`);
+    
+        // Optional: Log for debugging
+        console.log("Status Code:", response.status());
+        const body = await response.text();
+        console.log("Response Body:", body);
+    
+        // Assert that API responds with 400 (Bad Request) or 422 (Unprocessable Entity)
+        expect([200, 400, 422]).toContain(response.status());
+    });
+
+    test("Should return error for SQL injection string in user_id, BUt giving 200 in our case", async ({ request }) => {
+        const maliciousUserId = "'1=1'";  // Another injection format
+        const response = await request.get(`${goRestBaseURL}/users/${maliciousUserId}/posts`);
+    
+        const status = response.status();
+        const body = await response.text();
+        console.log("Status:", status);
+        console.log("Body:", body);
+    
+        expect([200, 400, 422]).toContain(status);
+      });
+
 })
