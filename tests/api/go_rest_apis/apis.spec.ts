@@ -97,6 +97,15 @@ test.describe("GET -method :: Users API...", () => {
 
         
     });
+
+    test("Positive:  Check response time under 1000ms", async ({ request }) => {
+        const start = Date.now();
+        const response = await request.get(`${goRestBaseURL}/users`);
+        const duration = Date.now() - start;
+      
+        console.log(`Response time: ${duration}ms`);
+        expect(duration).toBeLessThanOrEqual(1000);
+    });
 });
 
 
@@ -447,6 +456,6 @@ test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
         console.log("Body:", body);
     
         expect([200, 400, 422]).toContain(status);
-      });
+    });
 
 })
