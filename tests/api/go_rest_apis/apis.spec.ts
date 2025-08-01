@@ -365,11 +365,40 @@ test.describe("GET - method : fetch ToDos", () =>{
 })
 
 
-test.describe("GET : method : Fetch the specific Users posts. ", () => {
+test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
     test("Positive: Fetch the user data for correct url", async({ request }) =>{
-        const response = await request.get(`${goRestBaseURL}//users/7440131/posts`);
+        const userId = 7440131;
+        const response = await request.get(`${goRestBaseURL}/users/${userId}/posts`);
         
         const body  = await response.json();
+        console.log("Body :: ", body);
+
         expect (response.status()).toBe(200);
+
+        if (!Array.isArray(body)) {
+            throw new Error("Expected response body to be an array");
+        }
+
+        expect(Array.isArray(body)).toBe(true);
+
+        const bodyLength =  body.length;
+        expect (bodyLength).toBe(1);
+
+        for (const post of body) {
+            expect(post).toHaveProperty('id');
+            assertPositiveInteger(post.id);
+
+            expect(post).toHaveProperty('user_id');
+            assertPositiveInteger(post.user_id);
+            expect (userId).toBe(post.user_id);
+
+            expect(post).toHaveProperty('title');
+            assertNonEmptyString(post.title);
+
+            expect(post).toHaveProperty('body');
+            assertNonEmptyString(post.body);
+
+        }
+
     });
 })
