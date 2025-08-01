@@ -363,3 +363,13 @@ test.describe("GET - method : fetch ToDos", () =>{
     
     
 })
+
+
+test.describe("GET : method : Fetch the specific Users posts. ", () => {
+    test("Positive: Fetch the user data for correct url", async({ request }) =>{
+        const response = await request.get(`${goRestBaseURL}//users/7440131/posts`);
+        
+        const body  = await response.json();
+        expect (response.status()).toBe(200);
+    });
+})
