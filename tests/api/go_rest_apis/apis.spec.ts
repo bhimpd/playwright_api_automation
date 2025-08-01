@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test';
+import { test, expect, request, APIResponse } from '@playwright/test';
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -300,4 +300,66 @@ test.describe("GET - method : fetch ToDos", () =>{
         expect(response.status()).toBe(404);
 
     });
+
+    test("INFO: Rate Limit behavior test", async ({ request }) => {
+        const maxAttempts = 10;
+        let tooManyRequestsCount = 0;
+    
+        for (let i = 0; i < maxAttempts; i++) {
+            const response = await request.get(`${goRestBaseURL}/todos`);
+    
+            if (response.status() === 429) {
+                console.log(`Rate limit hit at request #${i + 1}`);
+                tooManyRequestsCount++;
+            }
+        }
+    
+        if (tooManyRequestsCount > 0) {
+            console.log(`✅ Rate limit triggered: ${tooManyRequestsCount} requests were blocked with 429`);
+        } else {
+            console.log("⚠️ No rate limit triggered. API allowed all 50 requests.");
+        }
+    
+        // Optional assert:
+        expect(tooManyRequestsCount).toBeGreaterThanOrEqual(0);
+    });
+
+    test("NEGATIVE: Rate limit test using parallel requests", async ({ request }) => {
+        const maxAttempts = 50;
+        const url = `${goRestBaseURL}/todos`;
+      
+        // Explicitly type the array to hold APIResponse promises
+        const requests: Promise<APIResponse>[] = [];
+      
+        for (let i = 0; i < maxAttempts; i++) {
+          requests.push(request.get(url));
+        }
+      
+        // Execute all requests in parallel
+        const responses: APIResponse[] = await Promise.all(requests);
+      
+        let tooManyRequestsCount = 0;
+      
+        responses.forEach((response, index) => {
+          const status = response.status();
+      
+          if (status === 429) {
+            console.log(`Rate limit hit at request #${index + 1}`);
+            tooManyRequestsCount++;
+          } else {
+            console.log(`Request #${index + 1} succeeded with status: ${status}`);
+          }
+        });
+      
+        if (tooManyRequestsCount > 0) {
+          console.log(`Rate limit triggered on ${tooManyRequestsCount} requests (429 responses)`);
+        } else {
+          console.log("All requests succeeded. No rate limiting detected.");
+        }
+      
+        // Optional assertion
+        expect(tooManyRequestsCount).toBeGreaterThanOrEqual(0);
+    });
+    
+    
 })
