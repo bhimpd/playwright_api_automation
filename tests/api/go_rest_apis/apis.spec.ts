@@ -471,4 +471,34 @@ test.describe("POST :Create the User", () => {
         expect (body.message).toBe("Authentication failed")
 
     });
+
+    test("Negative : Should throw the error while creating the user without any payload",async({request}) => {
+        const response = await request.post(`${goRestBaseURL}/users`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data :{}
+        });
+
+        expect (response.status()).toBe(422);
+        const body = await response.json();
+        console.log("ERRORS :; ", body);
+        expect(Array.isArray(body)).toBe(true);
+
+        const expectedErrors = [
+            { field: "email", message: "can't be blank" },
+            { field: "name", message: "can't be blank" },
+            { field: "gender", message: "can't be blank" },
+            { field: "status", message: "can't be blank" }
+          ];
+          
+        expectedErrors.forEach(expected => {
+            const error = body.find(err => err.field === expected.field);
+            expect(error).toBeTruthy();
+            expect(error.message).toContain(expected.message);
+        });
+          
+    });
+    
 })

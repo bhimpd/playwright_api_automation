@@ -6,10 +6,18 @@
       "last_name": "Updated_LastName",
       "avatar": "https://reqres.in/img_updated/faces/1-image.jpg"
     },
+    
     "loginUser": {
       "email": "eve.holt@reqres.in",
       "user_name":"Victor Memo",
       "password": "Password1!"
+    },
+
+    "createUser" : {
+      "email" :"qa+test@gmail.com",
+      "name": "Victor",
+      "gender": "male",
+      "status" : "active"
     }
   }
   
