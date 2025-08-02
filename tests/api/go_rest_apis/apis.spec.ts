@@ -4,6 +4,7 @@ dotenv.config();
 
 import { assertPositiveInteger,assertNonEmptyString, assertValidEmail, assertGender,assertStatus, assertToDoStatus, assertValidDueOnDate, } from './helper/helperFunction';
 import { faker } from '@faker-js/faker';
+import { generateRandomUser } from './helper/userData';
 
 const goRestBaseURL = process.env.GOREST_BASEURL;
 const token = process.env.GOREST_TOKEN;
@@ -465,12 +466,7 @@ test.describe("GET : method : Fetch the specific Users posts. ", () => {
 test.describe.only("POST :Create the User", () => {
     test("Positive: Should Create the user for valid data..", async({request})=>{
 
-        const userCreateData = {
-            email: faker.internet.email(),
-            name: faker.person.fullName(),
-            gender: "male",
-            status: "active"
-          };
+        const userCreateData = generateRandomUser();
 
         const response = await request.post(`${goRestBaseURL}/users`, {
             headers: {
@@ -562,7 +558,28 @@ test.describe.only("POST :Create the User", () => {
         const genderError = body.find(err => err.field === "gender");
         expect(genderError).toBeTruthy();
         expect(genderError.message).toContain("can't be blank, can be male of female"); 
-      });
+    });
+      
+    test('Sequential: Create 10 users one-by-one', async ({ request }) => {
+        for (let i = 0; i < 10; i++) {
+            const userCreateData = generateRandomUser();
+
+            const response = await request.post(`${goRestBaseURL}/users`, {
+                headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+                },
+                data:userCreateData
+            });
+      
+          expect(response.status()).toBe(201);
+          const body = await response.json();
+          console.log("DATA Created ::: ", body);
+
+          expect(typeof body).toBe('object');
+       
+        }
+    });
       
 
 })
