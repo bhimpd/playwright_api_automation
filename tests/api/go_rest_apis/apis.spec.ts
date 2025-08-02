@@ -374,7 +374,7 @@ test.describe("GET - method : fetch ToDos", () =>{
 })
 
 
-test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
+test.describe("GET : method : Fetch the specific Users posts. ", () => {
     test("Positive: Fetch the user data for correct url", async({ request }) =>{
         const userId = 7440131;
         const response = await request.get(`${goRestBaseURL}/users/${userId}/posts`);
@@ -458,4 +458,12 @@ test.describe.only("GET : method : Fetch the specific Users posts. ", () => {
         expect([200, 400, 422]).toContain(status);
     });
 
+})
+
+
+test.describe("POST :Create the User", () => {
+    test("Negative: Create the user without authentication", async({request}) => {
+
+
+    });
 })
