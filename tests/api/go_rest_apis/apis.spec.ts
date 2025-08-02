@@ -487,6 +487,14 @@ test.describe.only("POST :Create the User", () => {
 
         const body = await response.json();
         expect(typeof body).toBe('object'); 
+        
+        expect(body).toHaveProperty('id');
+        assertPositiveInteger(body.id);
+
+        expect(body.name).toBe(userCreateData.name);
+        expect(body.email).toBe(userCreateData.email);
+        expect(body.gender).toBe(userCreateData.gender);
+        expect(body.status).toBe(userCreateData.status);
 
     });
 
