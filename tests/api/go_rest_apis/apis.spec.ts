@@ -538,37 +538,31 @@ test.describe.only("POST :Create the User", () => {
           
     });
 
-    test("Negative: Create the user with invalid gender", async({request}) => {
-
+    test("Negative: Create the user with invalid gender", async({ request }) => {
         const userCreateData = {
-            email: faker.internet.email(),
-            name: faker.person.fullName(),
-            gender: "males",
-            status: "active"
-          };
-
-          const response = await request.post(`${goRestBaseURL}/users`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-                'Content-Type': 'application/json'
-            },
-            data :userCreateData
+          email: faker.internet.email(),
+          name: faker.person.fullName(),
+          gender: "males",
+          status: "active"
+        };
+      
+        const response = await request.post(`${goRestBaseURL}/users`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            'Content-Type': 'application/json'
+          },
+          data: userCreateData
         });
-
-        expect (response.status()).toBe(422);
+      
+        expect(response.status()).toBe(422);
         const body = await response.json();
-        console.log("ERRORS :; ", body);
+      
         expect(Array.isArray(body)).toBe(true);
 
-        const expectedErrors = [
-            { field: "gender", message: "can't be blank, can be male of female" }
-        ];
-        expectedErrors.forEach(expected => {
-            const error = body.find(err => err.field === expected.field);
-            expect(error).toBeTruthy();
-            expect(error.message).toContain(expected.message);
-        });
-
-    });
+        const genderError = body.find(err => err.field === "gender");
+        expect(genderError).toBeTruthy();
+        expect(genderError.message).toContain("can't be blank, can be male of female"); 
+      });
+      
 
 })
