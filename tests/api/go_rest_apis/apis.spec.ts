@@ -376,7 +376,7 @@ test.describe("GET - method : fetch ToDos", () =>{
 
 test.describe("GET : method : Fetch the specific Users posts. ", () => {
     test("Positive: Fetch the user data for correct url", async({ request }) =>{
-        const userId = 7440131;
+        const userId = 8029070;
         const response = await request.get(`${goRestBaseURL}/users/${userId}/posts`);
         
         const body  = await response.json();
@@ -463,7 +463,12 @@ test.describe("GET : method : Fetch the specific Users posts. ", () => {
 
 test.describe("POST :Create the User", () => {
     test("Negative: Create the user without authentication", async({request}) => {
+        const response = await request.post(`${goRestBaseURL}/users`)
 
+        expect (response.status()).toBe(401);
+
+        const body = await response.json();
+        expect (body.message).toBe("Authentication failed")
 
     });
 })
