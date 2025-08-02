@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 import { assertPositiveInteger,assertNonEmptyString, assertValidEmail, assertGender,assertStatus, assertToDoStatus, assertValidDueOnDate, } from './helper/helperFunction';
+import { faker } from '@faker-js/faker';
 
 const goRestBaseURL = process.env.GOREST_BASEURL;
 const token = process.env.GOREST_TOKEN;
@@ -461,7 +462,35 @@ test.describe("GET : method : Fetch the specific Users posts. ", () => {
 })
 
 
-test.describe("POST :Create the User", () => {
+test.describe.only("POST :Create the User", () => {
+    test("Positive: Should Create the user for valid data..", async({request})=>{
+
+        const userCreateData = {
+            email: faker.internet.email(),
+            name: faker.person.fullName(),
+            gender: "male",
+            status: "active"
+          };
+
+        const response = await request.post(`${goRestBaseURL}/users`, {
+            headers: {
+                Authorization : `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            },
+            data : userCreateData
+        });
+
+
+        console.log("Creating Data ::: ",  userCreateData);
+
+        expect (response.status()).toBe(201);
+
+        const body = await response.json();
+        expect(typeof body).toBe('object'); 
+
+    });
+
+
     test("Negative: Create the user without authentication", async({request}) => {
         const response = await request.post(`${goRestBaseURL}/users`)
 
@@ -500,5 +529,5 @@ test.describe("POST :Create the User", () => {
         });
           
     });
-    
+
 })
